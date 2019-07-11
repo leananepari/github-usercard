@@ -3,9 +3,13 @@
            https://api.github.com/users/<your name>
 */
 
-axios.get('https://api.github.com/users/tetondan')
+axios.get('https://api.github.com/users/leananepari')
   .then(response => {
-    buildCard(response.data)
+    buildCard(response.data);
+    return response;
+  })
+  .then(response => {
+    getFollowers(response.data);
   })
   .catch(error => {
     console.log(error)
@@ -32,7 +36,16 @@ axios.get('https://api.github.com/users/tetondan')
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const friendsArray = ['leananepari', 'jondscott21', 'Bigorange8801', 'paintedlbird7', 'cmstexas', 'sethnadu', 'davindar'];
+
+function getFollowers(obj) {
+  axios.get(`${obj.followers_url}`)
+    .then(response => {
+      response.data.forEach(item => {
+        buildCard(item);
+      })
+    })
+}
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -79,7 +92,7 @@ function buildCard(obj) {
 
     let profile = document.createElement('p');
     let aTag = document.createElement('a');
-    profile.textContent = 'Profile:';
+    profile.textContent = 'Profile: ';
     aTag.href = obj.html_url;
     aTag.textContent = obj.html_url;
     profile.appendChild(aTag);

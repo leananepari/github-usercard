@@ -3,6 +3,14 @@
            https://api.github.com/users/<your name>
 */
 
+axios.get('https://api.github.com/users/tetondan')
+  .then(response => {
+    buildCard(response.data)
+  })
+  .catch(error => {
+    console.log(error)
+  })
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -45,6 +53,61 @@ const followersArray = [];
 </div>
 
 */
+function buildCard(obj) {
+  //Create Card div container
+  let card = document.createElement('div');
+  card.className = 'card';
+
+  //Create image element and assign given value to it
+  let img = document.createElement('img');
+  img.src = obj.avatar_url;
+
+  //Create card-info container div
+  let cardInfo = document.createElement('div');
+  cardInfo.className = 'card-info';
+    //Create all of its elements
+    let name = document.createElement('h3');
+    name.className = 'name';
+    name.textContent = obj.name;
+
+    let username = document.createElement('p');
+    username.className = 'username';
+    username.textContent = obj.login;
+
+    let location = document.createElement('p');
+    location.textContent = `Location: ${obj.location}`;
+
+    let profile = document.createElement('p');
+    let aTag = document.createElement('a');
+    profile.textContent = 'Profile:';
+    aTag.href = obj.html_url;
+    aTag.textContent = obj.html_url;
+    profile.appendChild(aTag);
+
+    let followers = document.createElement('p');
+    followers.textContent = `Followers: ${obj.followers}`;
+
+    let following = document.createElement('p');
+    following.textContent = `Following: ${obj.following}`;
+
+    let bio = document.createElement('p');
+    bio.textContent = `Bio: ${obj.bio}`
+
+    //Append to card-info
+    cardInfo.appendChild(name);
+    cardInfo.appendChild(username);
+    cardInfo.appendChild(location);
+    cardInfo.appendChild(profile);
+    cardInfo.appendChild(followers);
+    cardInfo.appendChild(following);
+    cardInfo.appendChild(bio);
+
+  //Append img and card-info to card
+  card.appendChild(img);
+  card.appendChild(cardInfo);
+
+  return document.querySelector('.cards').appendChild(card);
+}
 
 /* List of LS Instructors Github username's: 
   tetondan

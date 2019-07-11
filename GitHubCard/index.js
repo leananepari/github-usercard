@@ -42,7 +42,10 @@ function getFollowers(obj) {
   axios.get(`${obj.followers_url}`)
     .then(response => {
       response.data.forEach(item => {
-        buildCard(item);
+        axios.get(`${item.url}`)
+          .then(response => {
+            buildCard(response.data)
+          })
       })
     })
 }

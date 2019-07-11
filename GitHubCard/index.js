@@ -7,11 +7,11 @@ let mainUsername = 'leananepari';
 axios.get(`https://api.github.com/users/${mainUsername}`)
   .then(response => {
     buildCard(response.data);
-    // return response;
+    return response;
   })
-  // .then(response => {
-  //   getFollowers(response.data);
-  // })
+  .then(response => {
+    getFollowers(response.data);
+  })
   .catch(error => {
     console.log(error)
   })

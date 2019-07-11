@@ -2,15 +2,16 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+let mainUsername = 'leananepari';
 
-axios.get('https://api.github.com/users/leananepari')
+axios.get(`https://api.github.com/users/${mainUsername}`)
   .then(response => {
     buildCard(response.data);
-    return response;
+    // return response;
   })
-  .then(response => {
-    getFollowers(response.data);
-  })
+  // .then(response => {
+  //   getFollowers(response.data);
+  // })
   .catch(error => {
     console.log(error)
   })
@@ -46,9 +47,12 @@ function getFollowers(obj) {
           .then(response => {
             buildCard(response.data)
           })
+          .catch(error => {
+            console.log(error)
+          })
       })
     })
-}
+}   
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -122,6 +126,40 @@ function buildCard(obj) {
   card.appendChild(img);
   card.appendChild(cardInfo);
 
+/* ------------------------------------------------------------------------------
+   Handle adding a contribution graph under the main username. Also, add followers 
+   title after which all the followers will be displayed */
+
+  //Create div to hold API's main user's contribution graph; also, add followers title underneath
+  //<img src="http://ghchart.rshah.org/" />
+  let container = document.createElement('div');
+
+  let githubUser = document.createElement('h1');
+  githubUser.textContent = `GitHub user: ${obj.name}`;
+  githubUser.className = 'github-user';
+
+  let contributionsTitle = document.createElement('h2');
+  contributionsTitle.textContent = 'Contributions';
+  contributionsTitle.className = 'contributions-title';
+
+  let contributionGraph = document.createElement('img');
+  contributionGraph.className = 'graph';
+  contributionGraph.src = `http://ghchart.rshah.org/${mainUsername}`;
+
+  let followersTitle = document.createElement('h2');
+  followersTitle.textContent = 'Followers: '
+  followersTitle.className = 'followers-title';
+
+  if(obj.login === mainUsername) {
+    container.appendChild(githubUser);
+    container.appendChild(card);
+    container.appendChild(contributionsTitle);
+    container.appendChild(contributionGraph);
+    container.appendChild(followersTitle);
+    return document.querySelector('.cards').appendChild(container);
+  }
+/* ----------------------------------------------------------------------*/
+  
   return document.querySelector('.cards').appendChild(card);
 }
 

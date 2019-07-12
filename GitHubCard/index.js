@@ -1,7 +1,6 @@
-/* Step 1: using axios, send a GET request to the following URL 
-           (replacing the palceholder with your Github name):
-           https://api.github.com/users/<your name>
-*/
+// Using axios, send GET request to Github users api, using my Github username
+// API: https://api.github.com/users/<your name>
+
 let mainUsername = 'leananepari';
 
 axios.get(`https://api.github.com/users/${mainUsername}`)
@@ -10,35 +9,17 @@ axios.get(`https://api.github.com/users/${mainUsername}`)
     return response;
   })
   .then(response => {
+    //Call getFollowers function to handle getting followers data
     getFollowers(response.data);
   })
   .catch(error => {
     console.log(error)
   })
 
-/* Step 2: Inspect and study the data coming back, this is YOUR 
-   github info! You will need to understand the structure of this 
-   data in order to use it to build your component function 
+// const friendsArray = ['leananepari', 'jondscott21', 'Bigorange8801', 'paintedlbird7', 'cmstexas', 'sethnadu', 'davindar'];
 
-   Skip to Step 3.
-*/
-
-/* Step 4: Pass the data received from Github into your function, 
-           create a new component and add it to the DOM as a child of .cards
-*/
-
-/* Step 5: Now that you have your own card getting added to the DOM, either 
-          follow this link in your browser https://api.github.com/users/<Your github name>/followers 
-          , manually find some other users' github handles, or use the list found 
-          at the bottom of the page. Get at least 5 different Github usernames and add them as
-          Individual strings to the friendsArray below.
-          
-          Using that array, iterate over it, requesting data for each user, creating a new card for each
-          user, and adding that card to the DOM.
-*/
-
-const friendsArray = ['leananepari', 'jondscott21', 'Bigorange8801', 'paintedlbird7', 'cmstexas', 'sethnadu', 'davindar'];
-
+//Iterate over followers-url response and for each make another get request to get all the needed data for each user
+//pass that data to build card function
 function getFollowers(obj) {
   axios.get(`${obj.followers_url}`)
     .then(response => {
@@ -52,10 +33,12 @@ function getFollowers(obj) {
           })
       })
     })
+    .catch(error => {
+      console.log(error)
+    })
 }   
 
-/* Step 3: Create a function that accepts a single object as its only argument,
-          Using DOM methods and properties, create a component that will return the following DOM element:
+/* How Card element should look like:
 
 <div class="card">
   <img src={image url of user} />
@@ -73,6 +56,8 @@ function getFollowers(obj) {
 </div>
 
 */
+
+//Build Card element using the structure above
 function buildCard(obj) {
   //Create Card div container
   let card = document.createElement('div');
@@ -126,17 +111,16 @@ function buildCard(obj) {
   card.appendChild(img);
   card.appendChild(cardInfo);
 
-/* ------------------------------------------------------------------------------
-   Handle adding a contribution graph under the main username. Also, add followers 
-   title after which all the followers will be displayed */
+/* ------------------------------------------------------------------------------*/
+  //Handle adding a contribution graph under the main username. Plus, additional couple of elements 
 
-  //Create div to hold API's main user's contribution graph; also, add followers title underneath
-  //<img src="http://ghchart.rshah.org/" />
+  //Use following githubchart api (github link: https://github.com/2016rshah/githubchart-api)
+  //API url to use as an image src: <img src="http://ghchart.rshah.org/<username>" />
   let container = document.createElement('div');
 
-  let githubUser = document.createElement('h1');
-  githubUser.textContent = `GitHub user: ${obj.name}`;
-  githubUser.className = 'github-user';
+  let githubUserTitle = document.createElement('h1');
+  githubUserTitle.textContent = `GitHub user: ${obj.name}`;
+  githubUserTitle.className = 'github-user';
 
   let contributionsTitle = document.createElement('h2');
   contributionsTitle.textContent = 'Contributions';
@@ -151,7 +135,7 @@ function buildCard(obj) {
   followersTitle.className = 'followers-title';
 
   if(obj.login === mainUsername) {
-    container.appendChild(githubUser);
+    container.appendChild(githubUserTitle);
     container.appendChild(card);
     container.appendChild(contributionsTitle);
     container.appendChild(contributionGraph);
@@ -163,10 +147,3 @@ function buildCard(obj) {
   return document.querySelector('.cards').appendChild(card);
 }
 
-/* List of LS Instructors Github username's: 
-  tetondan
-  dustinmyers
-  justsml
-  luishrd
-  bigknell
-*/
